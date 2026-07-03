@@ -1,3 +1,6 @@
+import sys
+# If Streamlit is not installed, run in your shell:
+#   python -m pip install streamlit
 import streamlit as st
 import joblib
 import numpy as np
