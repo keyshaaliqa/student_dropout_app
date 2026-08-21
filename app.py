@@ -1,6 +1,4 @@
 import sys
-# If Streamlit is not installed, run in your shell:
-#   python -m pip install streamlit
 import streamlit as st
 import joblib
 import numpy as np
@@ -73,8 +71,7 @@ if st.button("Prediksi"):
 
     label_map = {
         0: "Dropout",
-        1: "Enrolled",
-        2: "Graduate"
+        1: "Graduate"
     }
 
     st.success(
