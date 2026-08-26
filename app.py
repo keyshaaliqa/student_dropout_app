@@ -7,7 +7,7 @@ import pandas as pd
 # LOAD MODEL & SCALER
 # =========================
 model = joblib.load("dropout_model.pkl")
-scaler = joblib.load("scaler.pkl")
+scaler = joblib.load("scaler_6_features.pkl")
 
 st.set_page_config(
     page_title="Prediksi Dropout Mahasiswa",
