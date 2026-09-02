@@ -2,41 +2,20 @@ import streamlit as st
 import joblib
 import pandas as pd
 
+# =========================
+# LOAD MODEL & SCALER
+# =========================
 
-# =========================
-# PAGE CONFIG
-# =========================
+model = joblib.load("dropout_model.pkl")
+scaler = joblib.load("scaler_6_features.pkl")
 
 st.set_page_config(
     page_title="Prediksi Dropout Mahasiswa",
     page_icon="🎓"
 )
 
-
-# =========================
-# LOAD MODEL & SCALER
-# =========================
-
-model = joblib.load(
-    "dropout_model_6_features.pkl"
-)
-
-scaler = joblib.load(
-    "scaler_6_features.pkl"
-)
-
-
-# =========================
-# TITLE
-# =========================
-
 st.title("🎓 Prediksi Dropout Mahasiswa")
-
-st.write(
-    "Masukkan data mahasiswa untuk memprediksi "
-    "status akademik."
-)
-
+st.write("Masukkan data mahasiswa untuk memprediksi status akademik.")
 
 # =========================
 # INPUT DATA
@@ -44,9 +23,9 @@ st.write(
 
 age = st.number_input(
     "Age at Enrollment",
-    min_value=17,
-    max_value=70,
-    value=20
+    min_value=15,
+    max_value=100,
+    value=18
 )
 
 admission_grade = st.number_input(
@@ -56,14 +35,14 @@ admission_grade = st.number_input(
     value=120.0
 )
 
-sem1_grade = st.number_input(
+semester1_grade = st.number_input(
     "1st Semester Grade",
     min_value=0.0,
     max_value=20.0,
     value=10.0
 )
 
-sem2_grade = st.number_input(
+semester2_grade = st.number_input(
     "2nd Semester Grade",
     min_value=0.0,
     max_value=20.0,
@@ -80,7 +59,6 @@ scholarship = st.selectbox(
     [0, 1]
 )
 
-
 # =========================
 # PREDICTION
 # =========================
@@ -89,52 +67,63 @@ if st.button("Prediksi"):
 
     try:
 
-        # DataFrame dengan nama fitur
-        # yang SAMA dengan saat training
+        # ==========================================
+        # NAMA FITUR ASLI YANG DIGUNAKAN SAAT TRAINING
+        # ==========================================
 
-        data = pd.DataFrame([{
-            "Age at enrollment": age,
-            "Admission grade": admission_grade,
-            "Curricular units 1st sem (grade)": sem1_grade,
-            "Curricular units 2nd sem (grade)": sem2_grade,
-            "Tuition fees up to date": tuition,
-            "Scholarship holder": scholarship
-        }])
+        feature_names = [
+            "Age at enrollment",
+            "Admission grade",
+            "Curricular units 1st sem (grade)",
+            "Curricular units 2nd sem (grade)",
+            "Tuition fees up to date",
+            "Scholarship holder"
+        ]
 
-        # =========================
-        # VALIDASI
-        # =========================
+        # ==========================================
+        # MEMBUAT DATA INPUT
+        # ==========================================
 
-        if data.shape[1] != model.n_features_in_:
+        data = pd.DataFrame([[
+            age,
+            admission_grade,
+            semester1_grade,
+            semester2_grade,
+            tuition,
+            scholarship
+        ]], columns=feature_names)
 
-            st.error(
-                f"Jumlah fitur tidak sesuai. "
-                f"Model membutuhkan "
-                f"{model.n_features_in_} fitur, "
-                f"tetapi diberikan "
-                f"{data.shape[1]} fitur."
-            )
+        # ==========================================
+        # VALIDASI FITUR SCALER
+        # ==========================================
 
-            st.stop()
+        if hasattr(scaler, "feature_names_in_"):
 
+            scaler_features = list(scaler.feature_names_in_)
 
-        # =========================
+            if scaler_features != feature_names:
+
+                st.error("❌ Nama atau urutan fitur pada scaler tidak sesuai.")
+
+                st.write("**Fitur yang digunakan aplikasi:**")
+                st.write(feature_names)
+
+                st.write("**Fitur yang tersimpan pada scaler:**")
+                st.write(scaler_features)
+
+                st.stop()
+
+        # ==========================================
         # SCALING
-        # =========================
+        # ==========================================
 
         data_scaled = scaler.transform(data)
 
-
-        # =========================
+        # ==========================================
         # PREDICTION
-        # =========================
+        # ==========================================
 
         prediction = model.predict(data_scaled)
-
-
-        # =========================
-        # RESULT
-        # =========================
 
         label_map = {
             0: "Dropout",
@@ -143,26 +132,13 @@ if st.button("Prediksi"):
 
         result = label_map.get(
             int(prediction[0]),
-            "Unknown"
+            str(prediction[0])
         )
 
-
-        if result == "Dropout":
-
-            st.error(
-                f"📌 Hasil Prediksi: **{result}**"
-            )
-
-        else:
-
-            st.success(
-                f"🎓 Hasil Prediksi: **{result}**"
-            )
-
+        st.success(f"🎓 Hasil Prediksi: {result}")
 
     except Exception as e:
 
         st.error(
-            f"❌ Terjadi error saat melakukan "
-            f"prediksi: {str(e)}"
+            f"❌ Terjadi error saat melakukan prediksi: {str(e)}"
         )
