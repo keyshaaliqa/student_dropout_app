@@ -67,10 +67,7 @@ if st.button("Prediksi"):
 
     try:
 
-        # ==========================================
-        # NAMA FITUR ASLI YANG DIGUNAKAN SAAT TRAINING
-        # ==========================================
-
+        # Nama fitur harus SAMA PERSIS dengan saat training
         feature_names = [
             "Age at enrollment",
             "Admission grade",
@@ -80,10 +77,7 @@ if st.button("Prediksi"):
             "Scholarship holder"
         ]
 
-        # ==========================================
-        # MEMBUAT DATA INPUT
-        # ==========================================
-
+        # Membuat DataFrame input
         data = pd.DataFrame([[
             age,
             admission_grade,
@@ -93,9 +87,9 @@ if st.button("Prediksi"):
             scholarship
         ]], columns=feature_names)
 
-        # ==========================================
-        # VALIDASI FITUR SCALER
-        # ==========================================
+        # =========================
+        # CEK FITUR SCALER
+        # =========================
 
         if hasattr(scaler, "feature_names_in_"):
 
@@ -103,23 +97,27 @@ if st.button("Prediksi"):
 
             if scaler_features != feature_names:
 
-                st.write("**Fitur yang digunakan aplikasi:**")
+                st.error(
+                    "❌ Nama atau urutan fitur pada scaler tidak sesuai."
+                )
+
+                st.write("Fitur aplikasi:")
                 st.write(feature_names)
 
-                st.write("**Fitur yang tersimpan pada scaler:**")
+                st.write("Fitur scaler:")
                 st.write(scaler_features)
 
                 st.stop()
 
-        # ==========================================
+        # =========================
         # SCALING
-        # ==========================================
+        # =========================
 
         data_scaled = scaler.transform(data)
 
-        # ==========================================
+        # =========================
         # PREDICTION
-        # ==========================================
+        # =========================
 
         prediction = model.predict(data_scaled)
 
@@ -134,3 +132,9 @@ if st.button("Prediksi"):
         )
 
         st.success(f"🎓 Hasil Prediksi: {result}")
+
+    except Exception as e:
+
+        st.error(
+            f"❌ Terjadi error saat melakukan prediksi: {str(e)}"
+        )
