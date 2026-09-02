@@ -103,8 +103,6 @@ if st.button("Prediksi"):
 
             if scaler_features != feature_names:
 
-                st.error("❌ Nama atau urutan fitur pada scaler tidak sesuai.")
-
                 st.write("**Fitur yang digunakan aplikasi:**")
                 st.write(feature_names)
 
@@ -136,9 +134,3 @@ if st.button("Prediksi"):
         )
 
         st.success(f"🎓 Hasil Prediksi: {result}")
-
-    except Exception as e:
-
-        st.error(
-            f"❌ Terjadi error saat melakukan prediksi: {str(e)}"
-        )
