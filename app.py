@@ -3,10 +3,36 @@ import joblib
 import pandas as pd
 
 # =========================
-# LOAD MODEL & SCALER
+# LOAD MODEL
 # =========================
 
-model = joblib.load("dropout_model.pkl")
+model_data = joblib.load("dropout_model.pkl")
+
+if isinstance(model_data, dict):
+
+    st.write("Model merupakan dictionary.")
+    st.write("Keys:", list(model_data.keys()))
+
+    if "model" in model_data:
+        model = model_data["model"]
+
+    elif "best_model" in model_data:
+        model = model_data["best_model"]
+
+    else:
+        st.error(
+            "❌ Tidak ditemukan model pada dropout_model.pkl"
+        )
+        st.stop()
+
+else:
+    model = model_data
+
+
+# =========================
+# LOAD SCALER
+# =========================
+
 scaler = joblib.load("scaler_6_features.pkl")
 
 st.set_page_config(
