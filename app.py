@@ -1,11 +1,11 @@
 import streamlit as st
 import joblib
-import numpy as np
 import pandas as pd
 
 # =========================
 # LOAD MODEL & SCALER
 # =========================
+
 model = joblib.load("dropout_model.pkl")
 scaler = joblib.load("scaler_6_features.pkl")
 
@@ -65,50 +65,80 @@ scholarship = st.selectbox(
 
 if st.button("Prediksi"):
 
-    # Gunakan DataFrame agar nama dan urutan fitur jelas
-    data = pd.DataFrame([{
-        "Age at enrollment": age,
-        "Admission grade": admission_grade,
-        "Curricular units 1st sem (grade)": semester1_grade,
-        "Curricular units 2nd sem (grade)": semester2_grade,
-        "Tuition fees up to date": tuition,
-        "Scholarship holder": scholarship
-    }])
-
     try:
 
-        # Cek jumlah fitur scaler
-        expected_features = scaler.n_features_in_
+        # ==========================================
+        # NAMA FITUR ASLI YANG DIGUNAKAN SAAT TRAINING
+        # ==========================================
 
-        if data.shape[1] != expected_features:
-            st.error(
-                f"Jumlah fitur tidak sesuai. "
-                f"Scaler membutuhkan {expected_features} fitur, "
-                f"tetapi aplikasi memberikan {data.shape[1]} fitur."
-            )
+        feature_names = [
+            "Age at enrollment",
+            "Admission grade",
+            "Curricular units 1st sem (grade)",
+            "Curricular units 2nd sem (grade)",
+            "Tuition fees up to date",
+            "Scholarship holder"
+        ]
 
-        else:
+        # ==========================================
+        # MEMBUAT DATA INPUT
+        # ==========================================
 
-            # Scaling
-            data_scaled = scaler.transform(data)
+        data = pd.DataFrame([[
+            age,
+            admission_grade,
+            semester1_grade,
+            semester2_grade,
+            tuition,
+            scholarship
+        ]], columns=feature_names)
 
-            # Prediction
-            prediction = model.predict(data_scaled)
+        # ==========================================
+        # VALIDASI FITUR SCALER
+        # ==========================================
 
-            label_map = {
-                0: "Dropout",
-                1: "Graduate"
-            }
+        if hasattr(scaler, "feature_names_in_"):
 
-            result = label_map.get(
-                int(prediction[0]),
-                str(prediction[0])
-            )
+            scaler_features = list(scaler.feature_names_in_)
 
-            st.success(f"🎓 Hasil Prediksi: {result}")
+            if scaler_features != feature_names:
+
+                st.error("❌ Nama atau urutan fitur pada scaler tidak sesuai.")
+
+                st.write("**Fitur yang digunakan aplikasi:**")
+                st.write(feature_names)
+
+                st.write("**Fitur yang tersimpan pada scaler:**")
+                st.write(scaler_features)
+
+                st.stop()
+
+        # ==========================================
+        # SCALING
+        # ==========================================
+
+        data_scaled = scaler.transform(data)
+
+        # ==========================================
+        # PREDICTION
+        # ==========================================
+
+        prediction = model.predict(data_scaled)
+
+        label_map = {
+            0: "Dropout",
+            1: "Graduate"
+        }
+
+        result = label_map.get(
+            int(prediction[0]),
+            str(prediction[0])
+        )
+
+        st.success(f"🎓 Hasil Prediksi: {result}")
 
     except Exception as e:
 
         st.error(
-            f"Terjadi error saat melakukan prediksi: {str(e)}"
+            f"❌ Terjadi error saat melakukan prediksi: {str(e)}"
         )
