@@ -8,7 +8,7 @@ import joblib
 model_data = joblib.load("model.pkl")
 
 model = model_data["model"]
-preprocessor = model_data["preprocessor"]
+scaler = model_data["scaler"]
 
 
 # =========================
@@ -47,8 +47,7 @@ if st.button("Prediksi"):
     })
 
     try:
-        X_input = preprocessor.transform(input_data)
-
+        X_input = scaler.transform(input_data)
         prediction = model.predict(X_input)[0]
 
         if prediction == 0:
