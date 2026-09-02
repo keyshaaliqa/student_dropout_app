@@ -9,15 +9,59 @@ model_data = joblib.load("model.pkl")
 
 model = model_data["model"]
 preprocessor = model_data["preprocessor"]
-
+label_encoder = model_data["label_encoder"]
 
 # =========================
-# INPUT
+# KONFIGURASI HALAMAN
 # =========================
-age = st.number_input("Age at Enrollment", min_value=15, max_value=100, value=18)
-admission_grade = st.number_input("Admission Grade", value=120.0)
-grade_1 = st.number_input("1st Semester Grade", value=10.0)
-grade_2 = st.number_input("2nd Semester Grade", value=10.0)
+st.set_page_config(
+    page_title="Prediksi Dropout Mahasiswa",
+    page_icon="🎓",
+    layout="centered"
+)
+
+# =========================
+# JUDUL APLIKASI
+# =========================
+st.title("🎓 Prediksi Risiko Dropout Mahasiswa")
+st.write(
+    "Aplikasi ini digunakan untuk memprediksi apakah mahasiswa "
+    "berpotensi **Dropout** atau **Graduate** berdasarkan data akademik "
+    "dan karakteristik mahasiswa."
+)
+
+st.divider()
+
+# =========================
+# INPUT DATA
+# =========================
+age = st.number_input(
+    "Age at Enrollment",
+    min_value=15,
+    max_value=100,
+    value=18
+)
+
+admission_grade = st.number_input(
+    "Admission Grade",
+    min_value=0.0,
+    max_value=200.0,
+    value=120.0
+)
+
+grade_1 = st.number_input(
+    "1st Semester Grade",
+    min_value=0.0,
+    max_value=20.0,
+    value=10.0
+)
+
+grade_2 = st.number_input(
+    "2nd Semester Grade",
+    min_value=0.0,
+    max_value=20.0,
+    value=10.0
+)
 
 tuition = st.selectbox(
     "Tuition Fees Up To Date",
@@ -31,29 +75,30 @@ scholarship = st.selectbox(
     index=1
 )
 
-
 # =========================
-# PREDICTION
+# PREDIKSI
 # =========================
-if st.button("Prediksi"):
+if st.button("🔍 Prediksi", use_container_width=True):
 
-    input_data = pd.DataFrame({
-        "Age at Enrollment": [age],
-        "Admission Grade": [admission_grade],
-        "1st Semester Grade": [grade_1],
-        "2nd Semester Grade": [grade_2],
-        "Tuition Fees Up To Date": [tuition],
-        "Scholarship Holder": [scholarship]
-    })
+    input_data = pd.DataFrame([{
+        "Age at enrollment": age,
+        "Admission grade": admission_grade,
+        "Curricular units 1st sem (grade)": grade_1,
+        "Curricular units 2nd sem (grade)": grade_2,
+        "Tuition fees up to date": tuition,
+        "Scholarship holder": scholarship
+    }])
 
     try:
         X_input = preprocessor.transform(input_data)
-        prediction = model.predict(X_input)[0]
 
-        if prediction == 0:
-            st.error("⚠️ Prediksi: Dropout")
+        prediction = model.predict(X_input)[0]
+        result = label_encoder.inverse_transform([prediction])[0]
+
+        if result == "Dropout":
+            st.error("⚠️ Prediksi: **DROPOUT**")
         else:
-            st.success("🎓 Prediksi: Graduate")
+            st.success("🎓 Prediksi: **GRADUATE**")
 
     except Exception as e:
         st.error(f"❌ Terjadi error saat melakukan prediksi: {e}")
