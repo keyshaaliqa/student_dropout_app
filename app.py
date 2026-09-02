@@ -7,7 +7,7 @@ import pandas as pd
 # LOAD MODEL & SCALER
 # =========================
 model = joblib.load("dropout_model.pkl")
-scaler = joblib.load("scaler.pkl")
+scaler = joblib.load("scaler_6_features.pkl")
 
 st.set_page_config(
     page_title="Prediksi Dropout Mahasiswa",
@@ -23,9 +23,9 @@ st.write("Masukkan data mahasiswa untuk memprediksi status akademik.")
 
 age = st.number_input(
     "Age at Enrollment",
-    min_value=17,
-    max_value=70,
-    value=20
+    min_value=15,
+    max_value=100,
+    value=18
 )
 
 admission_grade = st.number_input(
@@ -35,14 +35,14 @@ admission_grade = st.number_input(
     value=120.0
 )
 
-sem1_grade = st.number_input(
+semester1_grade = st.number_input(
     "1st Semester Grade",
     min_value=0.0,
     max_value=20.0,
     value=10.0
 )
 
-sem2_grade = st.number_input(
+semester2_grade = st.number_input(
     "2nd Semester Grade",
     min_value=0.0,
     max_value=20.0,
@@ -67,12 +67,12 @@ if st.button("Prediksi"):
 
     # Gunakan DataFrame agar nama dan urutan fitur jelas
     data = pd.DataFrame([{
-        "Age at Enrollment": age,
-        "Admission Grade": admission_grade,
-        "1st Semester Grade": sem1_grade,
-        "2nd Semester Grade": sem2_grade,
-        "Tuition Fees Up To Date": tuition,
-        "Scholarship Holder": scholarship
+        "Age at enrollment": age,
+        "Admission grade": admission_grade,
+        "Curricular units 1st sem (grade)": semester1_grade,
+        "Curricular units 2nd sem (grade)": semester2_grade,
+        "Tuition fees up to date": tuition,
+        "Scholarship holder": scholarship
     }])
 
     try:
