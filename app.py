@@ -14,7 +14,7 @@ pipeline = Pipeline([
 
 pipeline.fit(X_train, y_train)
 
-model = joblib.load("model.pkl")
+joblib.dump(pipeline, "model.pkl")
 
 # =========================
 # KONFIGURASI HALAMAN
