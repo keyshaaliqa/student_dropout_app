@@ -238,8 +238,7 @@ gdp = st.number_input(
 # =========================
 # PREDIKSI
 # =========================
-if st.button("🔍 Prediksi", use_container_width=True):
-
+if st.button("🔍 Prediksi", use_container_width=True, key="prediksi_button"):
     input_data = pd.DataFrame([{
     "Marital status": marital_status,
     "Application mode": application_mode,
@@ -279,7 +278,7 @@ if st.button("🔍 Prediksi", use_container_width=True):
     "GDP": gdp
 }])
 
-if st.button("🔍 Prediksi", use_container_width=True):
+if st.button("🔍 Prediksi", use_container_width=True, key="prediksi_button"):
     try:
         X_input = preprocessor.transform(input_data)
 
