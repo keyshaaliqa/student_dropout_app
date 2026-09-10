@@ -1,5 +1,4 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
 import joblib
 
@@ -244,69 +243,57 @@ if st.button(
     use_container_width=True, 
     key="prediksi_button"
 ):
-    input_data = pd.DataFrame([{
-    "Marital status": marital_status,
-    "Application mode": application_mode,
-    "Application order": application_order,
-    "Course": course,
-    "Daytime/evening attendance\t": daytime_evening,
-    "Previous qualification": previous_qualification,
-    "Previous qualification (grade)": previous_qualification_grade,
-    "Nacionality": nationality,
-    "Mother's qualification": mother_qualification,
-    "Father's qualification": father_qualification,
-    "Mother's occupation": mother_occupation,
-    "Father's occupation": father_occupation,
-    "Admission grade": admission_grade,
-    "Displaced": displaced,
-    "Educational special needs": educational_special_needs,
-    "Debtor": debtor,
-    "Tuition fees up to date": tuition_fees,
-    "Gender": gender,
-    "Scholarship holder": scholarship_holder,
-    "Age at enrollment": age,
-    "International": international,
-    "Curricular units 1st sem (credited)": curricular_1_credited,
-    "Curricular units 1st sem (enrolled)": curricular_1_enrolled,
-    "Curricular units 1st sem (evaluations)": curricular_1_evaluations,
-    "Curricular units 1st sem (approved)": curricular_1_approved,
-    "Curricular units 1st sem (grade)": curricular_1_grade,
-    "Curricular units 1st sem (without evaluations)": curricular_1_without_evaluations,
-    "Curricular units 2nd sem (credited)": curricular_2_credited,
-    "Curricular units 2nd sem (enrolled)": curricular_2_enrolled,
-    "Curricular units 2nd sem (evaluations)": curricular_2_evaluations,
-    "Curricular units 2nd sem (approved)": curricular_2_approved,
-    "Curricular units 2nd sem (grade)": curricular_2_grade,
-    "Curricular units 2nd sem (without evaluations)": curricular_2_without_evaluations,
-    "Unemployment rate": unemployment_rate,
-    "Inflation rate": inflation_rate,
-    "GDP": gdp
-}])
 
     try:
-        expected_features = scaler.n_features_in_
+        input_data = pd.DataFrame([{
+            "Marital status": marital_status,
+            "Application mode": application_mode,
+            "Application order": application_order,
+            "Course": course,
+            "Daytime/evening attendance\t": daytime_evening,
+            "Previous qualification": previous_qualification,
+            "Previous qualification (grade)": previous_qualification_grade,
+            "Nacionality": nationality,
+            "Mother's qualification": mother_qualification,
+            "Father's qualification": father_qualification,
+            "Mother's occupation": mother_occupation,
+            "Father's occupation": father_occupation,
+            "Admission grade": admission_grade,
+            "Displaced": displaced,
+            "Educational special needs": educational_special_needs,
+            "Debtor": debtor,
+            "Tuition fees up to date": tuition_fees,
+            "Gender": gender,
+            "Scholarship holder": scholarship_holder,
+            "Age at enrollment": age,
+            "International": international,
+            "Curricular units 1st sem (credited)": curricular_1_credited,
+            "Curricular units 1st sem (enrolled)": curricular_1_enrolled,
+            "Curricular units 1st sem (evaluations)": curricular_1_evaluations,
+            "Curricular units 1st sem (approved)": curricular_1_approved,
+            "Curricular units 1st sem (grade)": curricular_1_grade,
+            "Curricular units 1st sem (without evaluations)": curricular_1_without_evaluations,
+            "Curricular units 2nd sem (credited)": curricular_2_credited,
+            "Curricular units 2nd sem (enrolled)": curricular_2_enrolled,
+            "Curricular units 2nd sem (evaluations)": curricular_2_evaluations,
+            "Curricular units 2nd sem (approved)": curricular_2_approved,
+            "Curricular units 2nd sem (grade)": curricular_2_grade,
+            "Curricular units 2nd sem (without evaluations)": curricular_2_without_evaluations,
+            "Unemployment rate": unemployment_rate,
+            "Inflation rate": inflation_rate,
+            "GDP": gdp
+        }])
 
-        if data.shape[1] != expected_features:
-            st.error(
-                f"Jumlah fitur tidak sesuai. "
-                f"Scaler membutuhkan {expected_features} fitur, "
-                f"tetapi aplikasi memberikan {data.shape[1]} fitur."
-            )
+        # Scaling
+        data_scaled = scaler.transform(data)
 
+                # Prediction
+        prediction = model.predict(data_scaled)[0]
+
+        if prediction == 0:
+                    st.error("Hasil Prediksi: Dropout")
         else:
-
-            # Prediction
-            prediction = model.predict(data_scaled)
-
-            if int(prediction[0]) == 0:
-                result = "Dropout"
-                st.error("📚 Hasil Prediksi: DROPOUT")
-            else:
-                result = "Graduate"
-                st.success("🎓 Hasil Prediksi: GRADUATE")
+                    st.success("Hasil Prediksi: Graduate")
 
     except Exception as e:
-
-        st.error(
-            f"Terjadi error saat melakukan prediksi: {str(e)}"
-        ) 
+        st.error(f"Terjadi error saat melakukan prediksi: {e}")
