@@ -295,9 +295,6 @@ if st.button(
 
         else:
 
-            # Scaling
-            data_scaled = scaler.transform(data)
-
             # Prediction
             prediction = model.predict(data_scaled)
 
