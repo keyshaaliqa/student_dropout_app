@@ -301,14 +301,12 @@ if st.button(
             # Prediction
             prediction = model.predict(data_scaled)
 
-            # Convert hasil prediksi menjadi Dropout / Graduate
-            result = label_encoder.inverse_transform(
-                prediction.astype(int)
-            )[0]
-
-            st.success(
-                f"🎓 Hasil Prediksi: {result}"
-            )
+            if int(prediction[0]) == 0:
+                result = "Dropout"
+                st.error("📚 Hasil Prediksi: DROPOUT")
+            else:
+                result = "Graduate"
+                st.success("🎓 Hasil Prediksi: GRADUATE")
 
     except Exception as e:
 
