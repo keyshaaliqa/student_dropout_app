@@ -286,7 +286,6 @@ if st.button(
     try:
         expected_features = scaler.n_features_in_
 
-
         if data.shape[1] != expected_features:
             st.error(
                 f"Jumlah fitur tidak sesuai. "
@@ -294,32 +293,25 @@ if st.button(
                 f"tetapi aplikasi memberikan {data.shape[1]} fitur."
             )
 
-
         else:
-
 
             # Scaling
             data_scaled = scaler.transform(data)
 
-
             # Prediction
             prediction = model.predict(data_scaled)
-
 
             # Convert hasil prediksi menjadi Dropout / Graduate
             result = label_encoder.inverse_transform(
                 prediction.astype(int)
             )[0]
 
-
             st.success(
                 f"🎓 Hasil Prediksi: {result}"
             )
 
-
     except Exception as e:
-
 
         st.error(
             f"Terjadi error saat melakukan prediksi: {str(e)}"
-        )
+        ) 
