@@ -238,7 +238,11 @@ gdp = st.number_input(
 # =========================
 # PREDIKSI
 # =========================
-if st.button("🔍 Prediksi", use_container_width=True, key="prediksi_button"):
+if st.button(
+    "🔍 Prediksi", 
+    use_container_width=True, 
+    key="prediksi_button"
+):
     input_data = pd.DataFrame([{
     "Marital status": marital_status,
     "Application mode": application_mode,
@@ -278,17 +282,18 @@ if st.button("🔍 Prediksi", use_container_width=True, key="prediksi_button"):
     "GDP": gdp
 }])
 
-if st.button("🔍 Prediksi", use_container_width=True, key="prediksi_button"):
+if st.button(
+    "🔍 Prediksi", 
+    use_container_width=True, 
+    key="prediksi_button"
+):
     try:
         X_input = preprocessor.transform(input_data)
 
-        prediction = model.predict(X_input)[0]
-        result = label_encoder.inverse_transform([prediction])[0]
+        pprediction = model.predict(data_scaled)
 
-        if result == "Dropout":
-            st.error("⚠️ Prediksi: **DROPOUT**")
-        else:
-            st.success("🎓 Prediksi: **GRADUATE**")
+        result = label_encoder.inverse_transform(
+            prediction.astype(int)
+        )[0]
 
-    except Exception as e:
-        st.error(f"❌ Terjadi error saat melakukan prediksi: {e}")
+st.success(f"🎓 Hasil Prediksi: {result}")
