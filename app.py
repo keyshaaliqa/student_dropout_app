@@ -1,15 +1,20 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 # =========================
 # LOAD MODEL
 # =========================
-model_data = joblib.load("model.pkl")
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", model)
+])
 
-model = model_data["model"]
-preprocessor = model_data["preprocessor"]
-label_encoder = model_data["label_encoder"]
+pipeline.fit(X_train, y_train)
+
+model = joblib.load("model.pkl")
 
 # =========================
 # KONFIGURASI HALAMAN
