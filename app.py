@@ -1,20 +1,11 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 
 # =========================
 # LOAD MODEL
 # =========================
-pipeline = Pipeline([
-    ("scaler", StandardScaler()),
-    ("model", model)
-])
-
-pipeline.fit(X_train, y_train)
-
-joblib.dump(pipeline, "model.pkl")
+model = joblib.load("model.pkl")
 
 # =========================
 # KONFIGURASI HALAMAN
@@ -243,11 +234,7 @@ gdp = st.number_input(
 # =========================
 # PREDIKSI
 # =========================
-if st.button(
-    "🔍 Prediksi", 
-    use_container_width=True, 
-    key="prediksi_button"
-):
+if st.button("🔍 Prediksi"):
 
     try:
         input_data = pd.DataFrame([{
@@ -289,16 +276,12 @@ if st.button(
             "GDP": gdp
         }])
 
-        # Scaling
-        data_scaled = scaler.transform(data)
-
-                # Prediction
-        prediction = model.predict(data_scaled)[0]
+        prediction = model.predict(data)[0]
 
         if prediction == 0:
-                    st.error("Hasil Prediksi: Dropout")
+            st.error("Hasil Prediksi: Dropout")
         else:
-                    st.success("Hasil Prediksi: Graduate")
+            st.success("Hasil Prediksi: Graduate")
 
     except Exception as e:
         st.error(f"Terjadi error saat melakukan prediksi: {e}")
