@@ -8,22 +8,20 @@ import joblib
 model = joblib.load("model.pkl")
 
 # =========================
+# JUDUL APLIKASI
+# =========================
+st.title("🎓 Prediksi Risiko Dropout Mahasiswa")
+st.write(
+    "Aplikasi ini digunakan untuk memprediksi apakah mahasiswa berpotensi **Dropout** atau **Graduate** berdasarkan data akademik dan karakteristik mahasiswa."
+)
+
+# =========================
 # KONFIGURASI HALAMAN
 # =========================
 st.set_page_config(
     page_title="Prediksi Dropout Mahasiswa",
     page_icon="🎓",
     layout="centered"
-)
-
-# =========================
-# JUDUL APLIKASI
-# =========================
-st.title("🎓 Prediksi Risiko Dropout Mahasiswa")
-st.write(
-    "Aplikasi ini digunakan untuk memprediksi apakah mahasiswa "
-    "berpotensi **Dropout** atau **Graduate** berdasarkan data akademik "
-    "dan karakteristik mahasiswa."
 )
 
 st.divider()
@@ -34,10 +32,30 @@ st.divider()
 
 st.subheader("📋 Input Data Mahasiswa")
 
-marital_status = st.number_input("Marital status", min_value=0, value=1)
-application_mode = st.number_input("Application mode", min_value=0, value=1)
-application_order = st.number_input("Application order", min_value=0, value=1)
-course = st.number_input("Course", min_value=0, value=1)
+marital_status = st.number_input(
+    "Marital status", 
+    min_value=0, 
+    value=1
+)
+
+application_mode = st.number_input(
+    "Application mode", 
+    min_value=0, 
+    value=1
+)
+
+application_order = st.number_input(
+    "Application order", 
+    min_value=0, 
+    value=1
+)
+
+course = st.number_input(
+    "Course", 
+    min_value=0, 
+    value=1
+)
+
 daytime_evening = st.number_input(
     "Daytime/evening attendance",
     min_value=0,
@@ -53,7 +71,7 @@ previous_qualification = st.number_input(
 previous_qualification_grade = st.number_input(
     "Previous qualification (grade)",
     min_value=0.0,
-    value=120.0
+    value=100.0
 )
 
 nationality = st.number_input(
@@ -89,25 +107,25 @@ father_occupation = st.number_input(
 admission_grade = st.number_input(
     "Admission grade",
     min_value=0.0,
-    value=120.0
+    value=100.0
 )
 
 displaced = st.number_input(
     "Displaced",
     min_value=0,
-    value=0
+    value=1
 )
 
 educational_special_needs = st.number_input(
     "Educational special needs",
     min_value=0,
-    value=0
+    value=1
 )
 
 debtor = st.number_input(
     "Debtor",
     min_value=0,
-    value=0
+    value=1
 )
 
 tuition_fees = st.number_input(
@@ -125,7 +143,7 @@ gender = st.number_input(
 scholarship_holder = st.number_input(
     "Scholarship holder",
     min_value=0,
-    value=0
+    value=1
 )
 
 age = st.number_input(
@@ -138,81 +156,81 @@ age = st.number_input(
 international = st.number_input(
     "International",
     min_value=0,
-    value=0
+    value=1
 )
 
 # Semester 1
 curricular_1_credited = st.number_input(
     "Curricular units 1st sem (credited)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_1_enrolled = st.number_input(
     "Curricular units 1st sem (enrolled)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_1_evaluations = st.number_input(
     "Curricular units 1st sem (evaluations)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_1_approved = st.number_input(
     "Curricular units 1st sem (approved)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_1_grade = st.number_input(
     "Curricular units 1st sem (grade)",
     min_value=0.0,
-    value=0.0
+    value=100.0
 )
 
 curricular_1_without_evaluations = st.number_input(
     "Curricular units 1st sem (without evaluations)",
     min_value=0,
-    value=0
+    value=1
 )
 
 # Semester 2
 curricular_2_credited = st.number_input(
     "Curricular units 2nd sem (credited)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_2_enrolled = st.number_input(
     "Curricular units 2nd sem (enrolled)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_2_evaluations = st.number_input(
     "Curricular units 2nd sem (evaluations)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_2_approved = st.number_input(
     "Curricular units 2nd sem (approved)",
     min_value=0,
-    value=0
+    value=1
 )
 
 curricular_2_grade = st.number_input(
     "Curricular units 2nd sem (grade)",
     min_value=0.0,
-    value=0.0
+    value=100.0
 )
 
 curricular_2_without_evaluations = st.number_input(
     "Curricular units 2nd sem (without evaluations)",
     min_value=0,
-    value=0
+    value=1
 )
 
 unemployment_rate = st.number_input(
@@ -223,11 +241,13 @@ unemployment_rate = st.number_input(
 
 inflation_rate = st.number_input(
     "Inflation rate",
+    min_value=0.0,
     value=1.0
 )
 
 gdp = st.number_input(
     "GDP",
+    min_value=0.0,
     value=1.0
 )
 
@@ -276,12 +296,12 @@ if st.button("🔍 Prediksi"):
             "GDP": gdp
         }])
 
-        prediction = model.predict(data)[0]
+        prediction = model.predict(input_data)[0]
 
         if prediction == 0:
-            st.error("Hasil Prediksi: Dropout")
+            st.error("Hasil Prediksi: DROPOUT")
         else:
-            st.success("Hasil Prediksi: Graduate")
-
+            st.success("Hasil Prediksi: GRADUATE")
+        
     except Exception as e:
         st.error(f"Terjadi error saat melakukan prediksi: {e}")
