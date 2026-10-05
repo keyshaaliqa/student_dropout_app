@@ -3,17 +3,17 @@ import pandas as pd
 import joblib
 
 # =========================
-# LOAD MODEL
-# =========================
-model = joblib.load("model.pkl")
-
-# =========================
 # JUDUL APLIKASI
 # =========================
 st.title("🎓 Prediksi Risiko Dropout Mahasiswa")
-st.write(
-    "Aplikasi ini digunakan untuk memprediksi apakah mahasiswa berpotensi **Dropout** atau **Graduate** berdasarkan data akademik dan karakteristik mahasiswa."
-)
+st.write("Aplikasi ini digunakan untuk memprediksi apakah mahasiswa berpotensi **Dropout** atau **Graduate** berdasarkan data akademik dan karakteristik mahasiswa.")
+
+# =========================
+# LOAD MODEL
+# =========================
+model = joblib.load("model.pkl")
+model = model_data["model"]
+preprocessor = model_data["preprocessor"]
 
 # =========================
 # KONFIGURASI HALAMAN
