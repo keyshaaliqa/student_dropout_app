@@ -16,17 +16,6 @@ model = model_data["model"]
 preprocessor = model_data["preprocessor"]
 
 # =========================
-# KONFIGURASI HALAMAN
-# =========================
-st.set_page_config(
-    page_title="Prediksi Dropout Mahasiswa",
-    page_icon="🎓",
-    layout="centered"
-)
-
-st.divider()
-
-# =========================
 # INPUT DATA
 # =========================
 
