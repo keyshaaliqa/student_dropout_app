@@ -285,12 +285,16 @@ if st.button("🔍 Prediksi"):
             "GDP": gdp
         }])
 
-        prediction = model.predict(input_data)[0]
+        # Preprocessing
+        input_processed = preprocessor.transform(input_data)
+
+        # Prediction
+        prediction = model.predict(input_processed)[0]
 
         if prediction == 0:
             st.error("Hasil Prediksi: DROPOUT")
         else:
             st.success("Hasil Prediksi: GRADUATE")
-        
+
     except Exception as e:
         st.error(f"Terjadi error saat melakukan prediksi: {e}")
