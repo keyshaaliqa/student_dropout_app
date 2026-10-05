@@ -5,8 +5,8 @@ import joblib
 # =========================
 # JUDUL APLIKASI
 # =========================
-st.title("🎓 Prediksi Risiko Dropout Mahasiswa")
-st.write("Aplikasi ini digunakan untuk memprediksi apakah mahasiswa berpotensi **Dropout** atau **Graduate** berdasarkan data akademik dan karakteristik mahasiswa.")
+st.title("🎓 Prediksi Dropout Mahasiswa")
+st.write("Aplikasi untuk memprediksi apakah mahasiswa berpotensi Dropout atau Graduate.")
 
 # =========================
 # LOAD MODEL
