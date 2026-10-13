@@ -1,7 +1,7 @@
 import streamlit as st
-import pandas as pd
 import joblib
-from pathlib import Path
+import numpy as np
+import pandas as pd
 
 # =========================
 # JUDUL APLIKASI
