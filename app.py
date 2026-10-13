@@ -5,19 +5,42 @@ import joblib
 # =========================
 # JUDUL APLIKASI
 # =========================
-st.title("🎓 Prediksi Dropout Mahasiswa")
-st.write("Aplikasi untuk memprediksi apakah mahasiswa berpotensi Dropout atau Graduate.")
+st.set_page_config(
+    page_title="Prediksi Dropout Mahasiswa",
+    page_description="Aplikasi untuk memprediksi apakah mahasiswa berpotensi Dropout atau Graduate.",
+    page_icon="🎓",
+    layout="wide"
+)
 
 # =========================
 # LOAD MODEL
 # =========================
-model = joblib.load("model.pkl")
+@st.cache_resource
+def load_model():
+    model_data = joblib.load("model.pkl")
 
+    model = model_data["model"]
+    preprocessor = model_data["preprocessor"]
+    label_encoder = model_data["label_encoder"]
+    feature_columns = model_data["feature_columns"]
+
+    return model, preprocessor, label_encoder, feature_columns
+
+
+try:
+    model, preprocessor, label_encoder, feature_columns = load_model()
+except Exception as e:
+    st.error(f"Gagal memuat model: {e}")
+    st.stop()
+    
 # =========================
 # INPUT DATA
 # =========================
-
-st.subheader("📋 Input Data Mahasiswa")
+st.title("🎓 Prediksi Dropout Mahasiswa")
+st.write(
+    "Masukkan data mahasiswa untuk memprediksi "
+    "status akademik: Dropout atau Graduate."
+)
 
 marital_status = st.number_input(
     "Marital status", 
@@ -241,7 +264,7 @@ gdp = st.number_input(
 # =========================
 # PREDIKSI
 # =========================
-if st.button("🔍 Prediksi"):
+if st.button("🔍 Prediksi", type="primary", use_container_width=True):
 
     try:
         input_data = pd.DataFrame([{
@@ -283,16 +306,29 @@ if st.button("🔍 Prediksi"):
             "GDP": gdp
         }])
 
+        # Menjaga urutan fitur sesuai model
+        input_data = pd.DataFrame(
+            [[input_values[col] for col in feature_columns]],
+            columns=feature_columns
+        )
+
         # Preprocessing
-        input_processed = preprocessor.transform(input_data)
+        input_scaled = preprocessor.transform(input_data)
 
         # Prediction
-        prediction = model.predict(input_processed)[0]
+        prediction = model.predict(input_scaled)
 
-        if prediction == 0:
-            st.error("Hasil Prediksi: DROPOUT")
+        # Decode hasil prediksi
+        result = label_encoder.inverse_transform(
+            prediction.astype(int)
+        )[0]
+
+        if result == "Dropout":
+            st.error(f"📉 Hasil Prediksi: {result}")
+        elif result == "Graduate":
+            st.success(f"🎓 Hasil Prediksi: {result}")
         else:
-            st.success("Hasil Prediksi: GRADUATE")
+            st.info(f"Hasil Prediksi: {result}")
 
     except Exception as e:
         st.error(f"Terjadi error saat melakukan prediksi: {e}")
