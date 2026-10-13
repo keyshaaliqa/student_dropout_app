@@ -12,7 +12,6 @@ st.write("Aplikasi untuk memprediksi apakah mahasiswa berpotensi Dropout atau Gr
 # LOAD MODEL
 # =========================
 model = joblib.load("model.pkl")
-preprocessor = model_data["preprocessor"]
 
 print("Tipe data:", type(model_data))
 
