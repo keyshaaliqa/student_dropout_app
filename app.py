@@ -13,13 +13,6 @@ st.write("Aplikasi untuk memprediksi apakah mahasiswa berpotensi Dropout atau Gr
 # =========================
 model = joblib.load("model.pkl")
 
-print("Tipe data:", type(model_data))
-
-if isinstance(model_data, dict):
-    print("Keys:", model_data.keys())
-else:
-    print("Objek model:", model_data)
-
 # =========================
 # INPUT DATA
 # =========================
