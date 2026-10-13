@@ -15,6 +15,13 @@ model = joblib.load("model.pkl")
 model = model_data["model"]
 preprocessor = model_data["preprocessor"]
 
+print("Tipe data:", type(model_data))
+
+if isinstance(model_data, dict):
+    print("Keys:", model_data.keys())
+else:
+    print("Objek model:", model_data)
+
 # =========================
 # INPUT DATA
 # =========================
