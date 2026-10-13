@@ -9,9 +9,7 @@ from pathlib import Path
 st.set_page_config(
     page_title="Prediksi Dropout Mahasiswa",
     page_description="Aplikasi untuk memprediksi apakah mahasiswa berpotensi Dropout atau Graduate.",
-    page_icon="🎓",
-    layout="centered",
-    initial_sidebar_state="auto"
+    page_icon="🎓"
 )
 
 # =========================
